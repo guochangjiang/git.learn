@@ -81,3 +81,27 @@ git log 命令显示从最近到最远的的提交日志。如果觉得输出信
 	xxxxx HEAD@(0): reset: move to HEAD^
 	xxxxx HEAD@(1):commit: note.information ##这样就可以找到未来版本号了
 	…………
+
+
+###3. 远程仓库
+
+####3.2 添加远程库
+第一步，登陆GitHub，然后在右上角找到"Creat a new repo"按钮，创建新的仓库。在Repository name填入与本地仓库同名，最后按照默认设置完成创建。
+第二步，根据GitHub提示在本地仓库下运行命令**git remote add origin <url\>** 即可将本地仓库与远程仓库相关联。
+
+	$ git remote add origin git@github.com:username/repo.name.git
+或者运行
+
+	$ git remote add origin https://github.com/username/repo.name.git
+如果出现以下出错信息
+
+	fatal: remote origin already exists.
+
+此时需要运行命令 **git remote rm origin** 后再重新运行上步关联命令。
+
+	$ git remote rm origin
+第三步，将本地库中的所有内容推送到远程库上，命令为 **git push -u origin master** 
+
+	$ git push -u origin master
+>用git push命令实际上是把当前分支master推送到远程。第一次推送master分支时，
+
