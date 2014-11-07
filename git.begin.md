@@ -119,3 +119,8 @@ hint: (e.g., 'git pull ...') before pushing again.
 hint: See the 'Note about fast-forwards' in 'git push --help' for details.
 ```
 此时可①通过pull子命令更新Github项目中作出的更改：`$ git pull origin master`,之后再执行`$ git push origin master`;②可用`git push -f`进行强制上传覆盖。
+
+
+删除文件用 git rm
+改文件名用 git mv
+使用 git 遇到问题时，git status 一下，通常都会有提示告诉你该怎么做
