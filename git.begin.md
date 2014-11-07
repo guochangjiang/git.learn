@@ -103,5 +103,19 @@ git log 命令显示从最近到最远的的提交日志。如果觉得输出信
 第三步，将本地库中的所有内容推送到远程库上，命令为 **git push -u origin master** 
 
 	$ git push -u origin master
->用git push命令实际上是把当前分支master推送到远程。第一次推送master分支时，
+	
+> 用git push命令实际上是把当前分支master推送到远程。第一次推送master分支时，
 
+> 定义远程服务器别名origin：`$ git remote add origin git@github.com:xxx/github-test.git`.本地和远程实行合并，本地默认为master:`$ git push origin master`;
+
+> 当通过Github以xxx对github-test作出修改时，由于本地快照与Github远程服务器上的不一致，会引起以下错误：
+```
+! [rejected]        master -> master (fetch first) 
+error: failed to push some refs to 'git@github.com:xxx/puppet' 
+hint: Updates were rejected because the remote contains work that you do 
+hint: not have locally. This is usually caused by another repository pushing 
+hint: to the same ref. You may want to first integrate the remote changes 
+hint: (e.g., 'git pull ...') before pushing again. 
+hint: See the 'Note about fast-forwards' in 'git push --help' for details.
+```
+此时可①通过pull子命令更新Github项目中作出的更改：`$ git pull origin master`,之后再执行`$ git push origin master`;②可用`git push -f`进行强制上传覆盖。
