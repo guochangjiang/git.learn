@@ -34,13 +34,25 @@ Linus一直痛恨的CVS及SVN都是集中式的版本控制系统，而Git是分
 像上面的命令，有很多Linux会友好地告诉你Git没有安装，还会告诉你如何安装Git。
 如果你碰巧用Debian或Ubuntu Linux，通过一条`sudo apt-get install git`就可以直接完成Git的安装，非常简单。老一点的Debian或Ubuntu Linux，要把命令改为`sudo apt-get install git-core`，因为以前有个软件也叫GIT（GNU Interactive Tools），结果Git就只能叫git-core了。由于Git名气实在太大，后来就把GNU Interactive Tools改成gnuit，git-core正式改为git。如果是其他Linux版本，可以直接通过源码安装。先从Git官网下载源码，然后解压，依次输入：`./config，make，sudo make install`这几个命令安装就好了。
 
+#### Mac OS
+Mac做开发，有两种安装Git的方法:
+
+1. 一是安装homebrew，然后通过homebrew安装Git，具体方法请参考homebrew的文档：http://brew.sh/。
+
+2. 第二种方法更简单，也是推荐的方法，就是直接从AppStore安装Xcode，Xcode集成了Git，不过默认没有安装，你需要运行Xcode，选择菜单“Xcode”->“Preferences”，在弹出窗口中找到“Downloads”，选择“Command Line Tools”，点“Install”就可以完成安装了。
+
+#### Windows
+msysgit是Windows版的Git，从http://msysgit.github.io/下载，然后按默认选项安装即可。安装完成后，在开始菜单里找到“Git”->“Git Bash”，蹦出一个类似命令行窗口的东西，就说明Git安装成功！
+
+#### 安装Git完成后的初始设置
+
+	$ git config --global user.name "Your Name"
+	$ git config --global user.email "email@example.com" 
+因为Git是分布式版本控制系统，所以，每个机器都必须自报家门：你的名字和Email地址。
+
+注意:git config命令的--global参数，用了这个参数，表示你这台机器上所有的Git仓库都会使用这个配置，当然也可以对某个仓库指定不同的用户名和Email地址。
 
 
-### 安装Git完成后的初始设置
-
-	$ git config --global usr.name
- 	$ git config --global usr.email  
-	
 ###1. 创建版本库  
 ####1.1 初始化目录为可管理的仓库
 执行 **git init** 命令，在目录下生成一个.git 文件。
