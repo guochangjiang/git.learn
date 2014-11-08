@@ -42,7 +42,7 @@ Mac做开发，有两种安装Git的方法:
 2. 第二种方法更简单，也是推荐的方法，就是直接从AppStore安装Xcode，Xcode集成了Git，不过默认没有安装，你需要运行Xcode，选择菜单“Xcode”->“Preferences”，在弹出窗口中找到“Downloads”，选择“Command Line Tools”，点“Install”就可以完成安装了。
 
 #### 2.3 Windows
-msysgit是Windows版的Git，从http://msysgit.github.io/下载，然后按默认选项安装即可。安装完成后，在开始菜单里找到“Git”->“Git Bash”，蹦出一个类似命令行窗口的东西，就说明Git安装成功！
+msysgit是Windows版的Git，从http://msysgit.github.io/ 下载，然后按默认选项安装即可。安装完成后，在开始菜单里找到“Git”->“Git Bash”，蹦出一个类似命令行窗口的东西，就说明Git安装成功！
 
 #### 2.4 安装Git完成后的初始设置
 
@@ -78,10 +78,10 @@ msysgit是Windows版的Git，从http://msysgit.github.io/下载，然后按默�
 	$ git add file3.txt
 	$ git commit -m "add 3 files."
 #### 小结
-1. 初始化一个Git仓库，使用git init命令。
+1. 初始化一个Git仓库，使用`git init`命令。
 2. 添加文件到Git仓库，分两步：
-	+ 第一步，使用命令git add filename，注意，可反复多次使用，添加多个文件；
-	+ 第二步，使用命令git commit –m “record.omfp，完成。
+	+ 第一步，使用命令`git add filename`，注意，可反复多次使用，添加多个文件；
+	+ 第二步，使用命令`git commit –m “record.omfp`，完成。
 
 	
 ### 4. 时光机穿梭
@@ -90,22 +90,27 @@ msysgit是Windows版的Git，从http://msysgit.github.io/下载，然后按默�
 第一步，**git status** 命令可以时刻掌控仓库状态，监控文件修改情况
 
 	$ git status
-第二步，git diff 命令查看文件修改详情
+第二步，**git diff** 命令查看文件修改详情
 
 	$ git diff modified.txt
-第三步，git add 命令添加文件到仓库
+第三步，**git add** 命令添加文件到仓库
 
 	$ git add modified.txt
-第四步，git status 命令查看待提交文件信息
+第四步，**git status** 命令查看待提交文件信息
 
 	$ git status
-第五步，git commit -m "" 命令提交文件
+第五步，**git commit -m ""** 命令提交文件
 	
 	$ git commit -m "modify file modified.txt"
-第六步，git status 命令查看仓库的当前状态
+第六步，**git status** 命令查看仓库的当前状态
 
 	$ git status
 Git会告诉我们当前没有需要提交的修改，工作目录是干净的。
+
+##### 小结
++ 要随时掌握工作区的状态，使用`git status`命令。
++ 如果git status告诉你有文件被修改过，用`git diff`可以查看修改内容。
+
 
 #### 4.2 版本回退
 
@@ -116,7 +121,7 @@ Git会告诉我们当前没有需要提交的修改，工作目录是干净的�
 	author: xxx <xxx#email.com>
 	Date: xxxx
 	note.information
-git log 命令显示从最近到最远的的提交日志。如果觉得输出信息过多，可以添加 --pretty=oneline 参数简化信息
+`git log` 命令显示从最近到最远的的提交日志。如果觉得输出信息过多，可以添加 --pretty=oneline 参数简化信息
 
 	$ git log --pretty=oneline
 	618dh8724779dfdj8e8797  note.information
@@ -139,6 +144,12 @@ git log 命令显示从最近到最远的的提交日志。如果觉得输出信
 	xxxxx HEAD@(0): reset: move to HEAD^
 	xxxxx HEAD@(1):commit: note.information ##这样就可以找到未来版本号了
 	…………
+
+##### 小结
+
++ HEAD指向的版本就是当前版本，因此，Git允许我们在版本的历史之间穿梭，使用命令`git reset --hard commit_id`。
++ 穿梭前，用`git log`可以查看提交历史，以便确定要回退到哪个版本。
++ 要重返未来，用`git reflog`查看命令历史，以便确定要回到未来的哪个版本。
 
 
 ### 5. 远程仓库
