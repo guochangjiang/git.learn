@@ -23,6 +23,16 @@ Linus一直痛恨的CVS及SVN都是集中式的版本控制系统，而Git是分
 
 先说集中式版本控制系统，版本库是集中存放在中央服务器的，而干活的时候，用的都是自己的电脑，所以要先从中央服务器取得最新的版本，然后开始干活，干完活了，再把自己的活推送给中央服务器。分布式版本控制系统根本没有“中央服务器”，每个人的电脑上都是一个完整的版本库，这样，你工作的时候，就不需要联网了，因为版本库就在你自己的电脑上。
 
+### Git安装
+
+#### linux
+首先，你可以试着输入git，看看系统有没有安装Git：
+
+	$ git
+	The program 'git' is currently not installed. You can install it by typing:
+	$ sudo apt-get install git
+像上面的命令，有很多Linux会友好地告诉你Git没有安装，还会告诉你如何安装Git。
+如果你碰巧用Debian或Ubuntu Linux，通过一条`sudo apt-get install git`就可以直接完成Git的安装，非常简单。老一点的Debian或Ubuntu Linux，要把命令改为`sudo apt-get install git-core`，因为以前有个软件也叫GIT（GNU Interactive Tools），结果Git就只能叫git-core了。由于Git名气实在太大，后来就把GNU Interactive Tools改成gnuit，git-core正式改为git。如果是其他Linux版本，可以直接通过源码安装。先从Git官网下载源码，然后解压，依次输入：`./config，make，sudo make install`这几个命令安装就好了。
 
 
 
