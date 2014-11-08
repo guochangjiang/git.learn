@@ -12,20 +12,20 @@
 9. 自定义Git
 10. 搭建Git服务器
 
-### Git简介
+### 1. Git简介
 Git是什么？Git是目前世界上最先进的分布式版本控制系统（没有之一）。
 
-#### Git的诞生
+#### 1.1 Git的诞生
 2005年，Linus花了两周时间自己用C写了一个分布式版本控制系统，这就是Git！一个月之内，Linux系统的源码已经由Git管理了。Git迅速成为最流行的分布式版本控制系统，尤其是2008年，GitHub网站上线了，它为开源项目免费提供Git存储，无数开源项目开始迁移至GitHub，包括jQuery，PHP，Ruby等等。
 
-#### 集中式vs分布式
+#### 1.2 集中式vs分布式
 Linus一直痛恨的CVS及SVN都是集中式的版本控制系统，而Git是分布式版本控制系统，集中式和分布式版本控制系统有什么区别呢？
 
 先说集中式版本控制系统，版本库是集中存放在中央服务器的，而干活的时候，用的都是自己的电脑，所以要先从中央服务器取得最新的版本，然后开始干活，干完活了，再把自己的活推送给中央服务器。分布式版本控制系统根本没有“中央服务器”，每个人的电脑上都是一个完整的版本库，这样，你工作的时候，就不需要联网了，因为版本库就在你自己的电脑上。
 
-### Git安装
+### 2. Git安装
 
-#### linux
+#### 2.1 linux
 首先，你可以试着输入git，看看系统有没有安装Git：
 
 	$ git
@@ -34,17 +34,17 @@ Linus一直痛恨的CVS及SVN都是集中式的版本控制系统，而Git是分
 像上面的命令，有很多Linux会友好地告诉你Git没有安装，还会告诉你如何安装Git。
 如果你碰巧用Debian或Ubuntu Linux，通过一条`sudo apt-get install git`就可以直接完成Git的安装，非常简单。老一点的Debian或Ubuntu Linux，要把命令改为`sudo apt-get install git-core`，因为以前有个软件也叫GIT（GNU Interactive Tools），结果Git就只能叫git-core了。由于Git名气实在太大，后来就把GNU Interactive Tools改成gnuit，git-core正式改为git。如果是其他Linux版本，可以直接通过源码安装。先从Git官网下载源码，然后解压，依次输入：`./config，make，sudo make install`这几个命令安装就好了。
 
-#### Mac OS
+#### 2.2 Mac OS
 Mac做开发，有两种安装Git的方法:
 
 1. 一是安装homebrew，然后通过homebrew安装Git，具体方法请参考homebrew的文档：http://brew.sh/。
 
 2. 第二种方法更简单，也是推荐的方法，就是直接从AppStore安装Xcode，Xcode集成了Git，不过默认没有安装，你需要运行Xcode，选择菜单“Xcode”->“Preferences”，在弹出窗口中找到“Downloads”，选择“Command Line Tools”，点“Install”就可以完成安装了。
 
-#### Windows
+#### 2.3 Windows
 msysgit是Windows版的Git，从http://msysgit.github.io/下载，然后按默认选项安装即可。安装完成后，在开始菜单里找到“Git”->“Git Bash”，蹦出一个类似命令行窗口的东西，就说明Git安装成功！
 
-#### 安装Git完成后的初始设置
+#### 2.4 安装Git完成后的初始设置
 
 	$ git config --global user.name "Your Name"
 	$ git config --global user.email "email@example.com" 
@@ -53,13 +53,14 @@ msysgit是Windows版的Git，从http://msysgit.github.io/下载，然后按默�
 注意:git config命令的--global参数，用了这个参数，表示你这台机器上所有的Git仓库都会使用这个配置，当然也可以对某个仓库指定不同的用户名和Email地址。
 
 
-###1. 创建版本库  
-####1.1 初始化目录为可管理的仓库
+### 3. 创建版本库
+
+#### 3.1 初始化目录为可管理的仓库
 执行 **git init** 命令，在目录下生成一个.git 文件。
 
 	$ git init 
 
-####1.2 添加文本文件到版本库
+#### 3.2 添加文本文件到版本库
 第一步，通过 **git add**  命令把文件添加到仓库
 
 	$ git add file.txt
@@ -76,8 +77,16 @@ msysgit是Windows版的Git，从http://msysgit.github.io/下载，然后按默�
 	$ git add file2.txt
 	$ git add file3.txt
 	$ git commit -m "add 3 files."
-###2. 时光机穿梭
-####2.1 仓库状态查看
+#### 小结
+1. 初始化一个Git仓库，使用git init命令。
+2. 添加文件到Git仓库，分两步：
+	+ 第一步，使用命令git add filename，注意，可反复多次使用，添加多个文件；
+	+ 第二步，使用命令git commit –m “record.omfp，完成。
+
+	
+### 4. 时光机穿梭
+
+#### 4.1 仓库状态查看
 第一步，**git status** 命令可以时刻掌控仓库状态，监控文件修改情况
 
 	$ git status
@@ -98,7 +107,7 @@ msysgit是Windows版的Git，从http://msysgit.github.io/下载，然后按默�
 	$ git status
 Git会告诉我们当前没有需要提交的修改，工作目录是干净的。
 
-####2.2 版本回退
+#### 4.2 版本回退
 
 第一步，**git log** 命令查看历史信息
 
@@ -132,9 +141,9 @@ git log 命令显示从最近到最远的的提交日志。如果觉得输出信
 	…………
 
 
-###3. 远程仓库
+### 5. 远程仓库
 
-####3.2 添加远程库
+#### 5.2 添加远程库
 第一步，登陆GitHub，然后在右上角找到"Creat a new repo"按钮，创建新的仓库。在Repository name填入与本地仓库同名，最后按照默认设置完成创建。
 第二步，根据GitHub提示在本地仓库下运行命令**git remote add origin <url\>** 即可将本地仓库与远程仓库相关联。
 
