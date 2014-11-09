@@ -49,6 +49,7 @@ msysgit是Windows版的Git，从http://msysgit.github.io/ 下载，然后按默�
 
 	$ git config --global user.name "Your Name"
 	$ git config --global user.email "email@example.com" 
+	
 因为Git是分布式版本控制系统，所以，每个机器都必须自报家门：你的名字和Email地址。
 
 注意:git config命令的--global参数，用了这个参数，表示你这台机器上所有的Git仓库都会使用这个配置，当然也可以对某个仓库指定不同的用户名和Email地址。
@@ -128,10 +129,12 @@ Git会告诉我们当前没有需要提交的修改，工作目录是干净的�
 	author: xxx <xxx#email.com>
 	Date: xxxx
 	note.information
+	
 `git log` 命令显示从最近到最远的的提交日志。如果觉得输出信息过多，可以添加 --pretty=oneline 参数简化信息
 
 	$ git log --pretty=oneline
 	618dh8724779dfdj8e8797  note.information
+	
 *其中长字符串“618dh8724779dfdj8e8797”是十六进制的 commit id.*
 
 文件版本简介
@@ -142,9 +145,11 @@ Git会告诉我们当前没有需要提交的修改，工作目录是干净的�
 	$ git reset --hard HEAD^
 	$ cat file.txt  #查看文件内容
 	$ git log #回退版本以后的历史记录不见了
+	
 原来的最新版本已经消失了，好比从21世纪穿越到19世纪，就会回不来了。其实还是可以穿越回来的，就是找到相应版本的commit id，就可以指定回到未来的某个版本
 
 	$ git reset --hard xxxxxxx   #commit id/版本号没有必要写全，前几位就可以了
+	
 如果无法找到commit id，可用 **git reflog** 命令查看命令历史记录
 
 	$ git reflog
@@ -206,9 +211,11 @@ Git管理的是修改，当你用`git add`命令后，在工作区的第一次�
 注册GitHub账号后，由于本地Git仓库和GitHub仓库之间的传输是通过SSH加密的，所以，需要一些初始设置：
 
 1. 第1步：创建**SSH Key**。在用户主目录下，如没有.ssh目录，打开Shell（Windows下打开Git Bash），创建SSH Key：   
+
 `$ ssh-keygen -t rsa -C youremail@example.com`
 
     如果一切顺利的话，可以在用户主目录里找到.ssh目录，里面有id_rsa和id_rsa.pub两个文件，这两个就是SSH Key的秘钥对，id_rsa是私钥，不能泄露出去，id_rsa.pub是公钥，可以放心地告诉任何人。
+    
 2. 登陆GitHub，打开“Account settings”，“SSH Keys”页面，然后，点“Add SSH Key”，填上任意Title，在Key文本框里粘贴id_rsa.pub文件的内容。
 
 GitHub允许你添加多个Key，只要把每台电脑的Key都添加到GitHub，就可以在每台电脑上往GitHub推送了。
@@ -238,6 +245,7 @@ GitHub允许你添加多个Key，只要把每台电脑的Key都添加到GitHub�
 此时需要运行命令 **git remote rm origin** 后再重新运行上步关联命令。
 
 `$ git remote rm origin`
+
 第三步，将本地库中的所有内容推送到远程库上，命令为 **git push -u origin master** 
 
 `$ git push -u origin master`
@@ -320,6 +328,7 @@ Git鼓励大量使用分支：
 当两个合并的分支中文件都具有新的修改时会无法进行“快速合并”，只能试图把各自的修改合并起来，但这种合并就可能会有冲突。直接查看readme.txt的内容时，Git用<<<<<<<，=======，>>>>>>>标记出不同分支的内容，我们修改后保存，再提交即可。
 
 用带参数的`git log`也可以看到分支的合并情况：  
+
 `$ git log --graph --pretty=oneline --abbrev-commit`.
 
 ##### 小结
@@ -328,7 +337,9 @@ Git鼓励大量使用分支：
 
 #### 6.3 分支管理策略
 通常，合并分支时，如果可能，Git会用“Fast forward”模式，但这种模式下，删除分支后，会丢掉分支信息。如果要强制禁用“Fast forward”模式，Git就会在merge时生成一个新的commit，这样，从分支历史上就可以看出分支信息。例如：准备合并dev分支，请注意--no-ff参数，表示禁用“Fast forward”：
+
 `$ git merge --no-ff -m "merge with no-ff" dev`
+
 > 因为本次合并要创建一个新的commit，所以加上-m参数，把commit描述写进去。
 
 ##### 6.3.1 分支策略
@@ -371,6 +382,7 @@ $ git checkout dev #回原先的分支继续干活
 再用`git stash list`查看，就看不到任何stash内容了.
 
 你可以多次stash，恢复的时候，先用git stash list查看，然后恢复指定的stash，用命令：
+
 `$ git stash apply stash@{0}`
 
 ###### 小结
@@ -381,9 +393,13 @@ $ git checkout dev #回原先的分支继续干活
 ##### 6.3.3 Feature分支
 
 软件开发中，添加一个新功能时，不希望因为一些实验性质的代码，把主分支搞乱了，所以，每添加一个新功能，最好新建一个feature分支，在上面开发，完成后，合并，最后，删除该feature分支。现在，你终于接到了一个新任务：开发代号为Vulcan的新功能，该功能计划用于下一代星际飞船。于是准备开发：  
+
 `$ git checkout -b feature-vulcan`
+
 当开发完毕并提交后，切回主分支并准备进行合并：`$ git checkout dev`，但接到上级命令，因经费不足，新功能必须取消！虽然白干了，但是这个分支还是必须就地销毁：`$ git branch -d feature-vulcan`，销毁失败。Git友情提醒，feature-vulcan分支还没有被合并，如果删除，将丢失掉修改，如果要强行删除，需要使用命令`git branch -D feature-vulcan`。现在强行删除：
+
 `$ git branch -D feature-vulcan`
+
 ###### 小结
 + 开发一个新feature，最好新建一个分支；
 + 如果要丢弃一个没有被合并过的分支，可以通过git branch -D name强行删除。
@@ -404,9 +420,13 @@ origin  git@github.com:michaelliao/learngit.git (push)
 
 ##### 6.4.1 推送分支
 推送分支，就是把该分支上的所有本地提交推送到远程库。推送时，要指定本地分支，这样，Git就会把该分支推送到远程库对应的远程分支上：
+
 `$ git push origin master`
+
 如果要推送其他分支，比如dev，就改成：
+
 `$ git push origin dev`
+
 但是，并不是一定要把本地分支往远程推送，那么，哪些分支需要推送，哪些不需要呢？
 
 + master分支是主分支，因此要时刻与远程同步；
@@ -417,18 +437,25 @@ origin  git@github.com:michaelliao/learngit.git (push)
 ##### 6.4.2 抓取分支
 多人协作时，大家都会往master和dev分支上推送各自的修改。从远程库clone时，默认情况下，只能看到本地的master分支。可以用git branch命令查看。
 
-若要在dev分支上开发，就必须创建远程origin的dev分支到本地，于是他用这个命令创建本地dev分支：
-`$ git checkout -b dev origin/dev`
-现在，就可以在dev上继续修改，然后，时不时地把dev分支push到远程。你的小伙伴已经向origin/dev分支推送了他的提交，而碰巧你也对同样的文件作了修改，并试图推送，但推送失败，因为你的小伙伴的最新提交和你试图推送的提交有冲突，解决办法也很简单，Git已经提示我们，先用git pull把最新的提交从origin/dev抓下来，然后，在本地合并，解决冲突，再推送：`$ git pull`。`git pull`也失败了，原因是没有指定本地dev分支与远程origin/dev分支的链接，根据提示，设置dev和origin/dev的链接：
-`$ git branch --set-upstream dev origin/dev`
-`$ git pull`
+若要在dev分支上开发，就必须创建远程origin的dev分支到本地，于是他用这个命令创建本地dev分支：  
+
+`$ git checkout -b dev origin/dev`  
+
+现在，就可以在dev上继续修改，然后，时不时地把dev分支push到远程。你的小伙伴已经向origin/dev分支推送了他的提交，而碰巧你也对同样的文件作了修改，并试图推送，但推送失败，因为你的小伙伴的最新提交和你试图推送的提交有冲突，解决办法也很简单，Git已经提示我们，先用git pull把最新的提交从origin/dev抓下来，然后，在本地合并，解决冲突，再推送：`$ git pull`。`git pull`也失败了，原因是没有指定本地dev分支与远程origin/dev分支的链接，根据提示，设置dev和origin/dev的链接：  
+
+`$ git branch --set-upstream dev origin/dev`  
+
+`$ git pull`  
+
 这回`git pull`成功，但是合并有冲突，需要手动解决，解决的方法和**分支管理**中的解决冲突完全一样。解决后，提交，再push。
 
 因此，多人协作的工作模式通常是这样：
+
 1.	首先，可以试图用`git push origin branch-name`推送自己的修改；
 2.	如果推送失败，则因为远程分支比你的本地更新，需要先用`git pull`试图合并；
 3.	如果合并有冲突，则解决冲突，并在本地提交；
 4.	没有冲突或者解决掉冲突后，再用`git push origin branch-name`推送就能成功！
+
 如果`git pull`提示“`no tracking information`”，则说明本地分支和远程分支的链接关系没有创建，用命令`git branch --set-upstream branch-name origin/branch-name`。
 
 这就是多人协作的工作模式，一旦熟悉了，就非常简单。
@@ -439,6 +466,107 @@ origin  git@github.com:michaelliao/learngit.git (push)
 + 在本地创建和远程分支对应的分支，使用`git checkout -b branch-name origin/branch-name`，本地和远程分支的名称最好一致；
 + 建立本地分支和远程分支的关联，使用`git branch --set-upstream branch-name origin/branch-name`；
 + 从远程抓取分支，使用`git pull`，如果有冲突，要先处理冲突。
+
+### 7. 标签管理
+
+发布一个版本时，我们通常先在版本库中打一个标签，这样，就唯一确定了打标签时刻的版本。将来无论什么时候，取某个标签的版本，就是把那个打标签的时刻的历史版本取出来。所以，标签也是版本库的一个快照。Git的标签虽然是版本库的快照，但其实它就是指向某个commit的指针（跟分支很像对不对？但是分支可以移动，标签不能移动），所以，创建和删除标签都是瞬间完成的。
+
+#### 7.1 创建标签
+在Git中打标签非常简单，首先，切换到需要打标签的分支上：
+
+```
+$ git branch
+* dev
+  master
+$ git checkout master
+Switched to branch 'master'
+```
+
+然后，敲命令`git tag name`就可以打一个新标签：
+
+`$ git tag v1.0`
+
+可以用命令`git tag`查看所有标签。
+
+默认标签是打在最新提交的commit上的。有时候，如果忘了打标签，怎么办？
+方法是找到历史提交的commit id，然后打上就可以了：
+
+```
+$ git log --pretty=oneline --abbrev-commit
+$ git tag v0.9 commit_id
+```
+
+用命令`git tag`查看标签，标签不是按时间顺序列出，而是按字母排序的。可以用`git show tagname`查看标签信息。
+
+此外，还可以创建带有说明的标签，用`-a`指定标签名，`-m`指定说明文字，如：
+
+`$ git tag -a v0.1 -m "version 0.1 released" commit_id`
+
+用命令`git show tagname`可以看到说明文字。
+
+还可以通过`-s`用私钥签名一个标签：
+
+`$ git tag -s v0.2 -m "signed version 0.2 released" commit_id`
+
+由于签名采用PGP签名，因此，必须首先安装gpg（GnuPG），如果没有找到gpg，或者没有gpg密钥对，就会报错。
+
+##### 小结
++ 命令`git tag name`用于新建一个标签，默认为HEAD，也可以指定一个`commit id`；
++ `git tag -a tagname -m "blablabla..."`可以指定标签信息；
++ `git tag -s tagname -m "blablabla..."`可以用PGP签名标签；
++ 命令`git tag`可以查看所有标签；
+
+#### 7.2 操作标签
+如果标签打错了，也可以删除：`$ git tag -d v0.1`.
+
+因为创建的标签都只存储在本地，不会自动推送到远程。所以，打错的标签可以在本地安全删除。
+
+如果要推送某个标签到远程，使用命令`git push origin tagname`.或者，一次性推送全部尚未推送到远程的本地标签：`$ git push origin --tags`.
+
+如果标签已经推送到远程，要删除远程标签就麻烦一点，先从本地删除：`$ git tag -d v0.9`;
+
+然后，从远程删除。删除命令也是push，但是格式如下：`$ git push origin :refs/tags/v0.9`
+
+##### 小结
++ 命令`git push origin tagname`可以推送一个本地标签；
++ 命令`git push origin --tags`可以推送全部未推送过的本地标签；
++ 命令`git tag -d tagname`可以删除一个本地标签；
++ 命令`git push origin :refs/tags/tagname`可以删除一个远程标签。
+
+### 8. 使用GitHub
+
+如何参与一个开源项目呢？比如人气极高的bootstrap项目，这是一个非常强大的CSS框架，你可以访问它的项目主页https://github.com/twbs/bootstrap，点“Fork”就在自己的账号下克隆了一个bootstrap仓库，然后，从自己的账号下clone：
+
+`$ git clone git@github.com:michaelliao/bootstrap.git`
+
+一定要从自己的账号下clone仓库，这样你才能推送修改。如果从bootstrap的作者的仓库地址git@github.com:twbs/bootstrap.git克隆，因为没有权限，你将不能推送修改。
+Bootstrap的官方仓库twbs/bootstrap、你在GitHub上克隆的仓库my/bootstrap，以及你自己克隆到本地电脑的仓库。
+ 
+如果你想修复bootstrap的一个bug，或者新增一个功能，立刻就可以开始干活，干完后，往自己的仓库推送。
+
+如果你希望bootstrap的官方库能接受你的修改，你就可以在GitHub上发起一个pull request。当然，对方是否接受你的pull request就不一定了。
+
+如果你没能力修改bootstrap，但又想要试一把pull request，那就Fork一下我的仓库：https://github.com/michaelliao/learngit， 创建一个your-github-id.txt的文本文件，写点自己学习Git的心得，然后推送一个`pull request`给我，我会视心情而定是否接受。
+
+#### 小结
++ 在GitHub上，可以任意Fork开源仓库；
++ 自己拥有Fork后的仓库的读写权限；
++ 可以推送pull request给官方仓库来贡献代码。
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
