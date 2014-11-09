@@ -553,37 +553,135 @@ Bootstrap的官方仓库twbs/bootstrap、你在GitHub上克隆的仓库my/bootst
 + 自己拥有Fork后的仓库的读写权限；
 + 可以推送pull request给官方仓库来贡献代码。
 
+### 10. 自定义Git
+
+在安装Git一节中，我们已经配置了user.name和user.email，实际上，Git还有很多可配置项。比如，让Git显示颜色，会让命令输出看起来更醒目：
+
+`$ git config --global color.ui true`
+
+这样，Git会适当地显示不同的颜色，比如git status命令：
+
+#### 10.1 忽略特殊文件
+
+有些时候，你必须把某些文件放到Git工作目录中，但又不能提交它们，比如保存了数据库密码的配置文件啦，等等，每次`git status`都会显示`“Untracked files ...”`，有强迫症的童鞋心里肯定不爽。
+
+好在Git考虑到了大家的感受，这个问题解决起来也很简单，在Git工作区的根目录下创建一个特殊的.gitignore文件，然后把要忽略的文件名填进去，Git就会自动忽略这些文件。
+
+不需要从头写.gitignore文件，GitHub已经为我们准备了各种配置文件，只需要组合一下就可以使用了。所有配置文件可以直接在线浏览：https://github.com/github/gitignore
+
+忽略文件的原则是：
+
+1.	忽略操作系统自动生成的文件，比如缩略图等；
+2.	忽略编译生成的中间文件、可执行文件等，也就是如果一个文件是通过另一个文件自动生成的，那自动生成的文件就没必要放进版本库，比如Java编译产生的.class文件；
+3.	忽略你自己的带有敏感信息的配置文件，比如存放口令的配置文件。
+
+加上你自己定义的文件，最终得到一个完整的.gitignore文件，内容如下：
+```
+# Windows:
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Python:
+*.py[cod]
+*.so
+*.egg
+*.egg-info
+dist
+build
+
+# My configurations:
+db.ini
+deploy_key_rsa
+```
+
+最后一步就是把.gitignore也提交到Git，就完成了！当然检验.gitignore的标准是`git status`命令是不是说“working directory clean”。
+
+使用Windows的童鞋注意了，如果你在资源管理器里新建一个.gitignore文件，它会非常弱智地提示你必须输入文件名，但是在文本编辑器里“保存”或者“另存为”就可以把文件保存为.gitignore了。
+
+##### 小结
+1.	忽略某些文件时，需要编写.gitignore。
+2.	.gitignore文件本身要放到版本库里，并且可以对.gitignore做版本管理！
+
+#### 10.2 配置别名
+
+有没有经常敲错命令？比如git status？status这个单词真心不好记。如果敲`git st`就表示`git status`那就简单多了，当然这种偷懒的办法我们是极力赞成的。其实，我们只需要敲一行命令，告诉Git，以后st就表示status：
+
+`$ git config --global alias.st status`
+
++ 当然还有别的命令可以简写，很多人都用co表示checkout，ci表示commit，br表示branch:
+```
+$ git config --global alias.co checkout
+$ git config --global alias.ci commit
+$ git config --global alias.br branch
+```
+
+--global参数是全局参数，也就是这些命令在这台电脑的所有Git仓库下都有用。
+
++ 在撤销修改一节中，我们知道，命令`git reset HEAD file`可以把暂存区的修改撤销掉（unstage），重新放回工作区。既然是一个unstage操作，就可以配置一个unstage别名：
+
+`$ git config --global alias.unstage 'reset HEAD'`
+
+当你敲入命令：`$ git unstage test.py`,实际上Git执行的是：`$ git reset HEAD test.py`.
+
++ 配置一个`git last`，让其显示最后一次提交信息：`$ git config --global alias.last 'log -1'`.
+
++ 还有人丧心病狂地把lg配置成了：
+`git config --global alias.lg "log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit"`
+
+##### 小结
+给Git配置好别名，就可以输入命令时偷个懒。我们鼓励偷懒。
+
+### 11. 搭建Git服务器
 
 
+GitHub就是一个免费托管开源代码的远程仓库。但是对于某些视源代码如生命的商业公司来说，既不想公开源代码，又舍不得给GitHub交保护费，那就只能自己搭建一台Git服务器作为私有仓库使用。
 
+#### 11.1 安装Git
 
+搭建Git服务器需要准备一台运行Linux的机器，强烈推荐用Ubuntu或Debian，这样，通过几条简单的apt命令就可以完成安装。
 
+假设你已经有sudo权限的用户账号，下面，正式开始安装。
 
+1. 第一步，安装git：`$ sudo apt-get install git`
+2. 第二步，创建一个git用户，用来运行git服务：`$ sudo adduser git`
+3. 第三步，创建证书登录：收集所有需要登录的用户的公钥，就是他们自己的id_rsa.pub文件，把所有公钥导入到/home/git/.ssh/authorized_keys文件里，一行一个;
+4. 第四步，初始化Git仓库：先选定一个目录作为Git仓库，假定是/srv/sample.git，在/srv目录下输入命令：`$ sudo git init --bare sample.git`,Git就会创建一个裸仓库，裸仓库没有工作区，因为服务器上的Git仓库纯粹是为了共享，所以不让用户直接登录到服务器上去改工作区，并且服务器上的Git仓库通常都以.git结尾。然后，把owner改为git：`$ sudo chown -R git:git sample.git`;
+5. 第五步，禁用shell登录：出于安全考虑，第二步创建的git用户不允许登录shell，这可以通过编辑/etc/passwd文件完成。找到类似下面的一行：`git:x:1001:1001:,,,:/home/git:/bin/bash`改为：`git:x:1001:1001:,,,:/home/git:/usr/bin/git-shell`;这样，git用户可以正常通过ssh使用git，但无法登录shell，因为我们为git用户指定的git-shell每次一登录就自动退出;
+6. 第六步，克隆远程仓库：现在，可以通过git clone命令克隆远程仓库了，在各自的电脑上运行：`$ git clone git@server:/srv/sample.git`;
 
+```
+	Cloning into 'sample'...
+	warning: You appear to have cloned an empty repository.
+```
 
+#### 11.2 管理公钥
 
+如果团队很小，把每个人的公钥收集起来放到服务器的/home/git/.ssh/authorized_keys文件里就是可行的。如果团队有几百号人，就没法这么玩了，这时，可以用Gitosis来管理公钥。
 
+#### 11.3 管理权限
 
+有很多不但视源代码如生命，而且视员工为窃贼的公司，会在版本控制系统里设置一套完善的权限控制，每个人是否有读写权限会精确到每个分支甚至每个目录下。因为Git是为Linux源代码托管而开发的，所以Git也继承了开源社区的精神，不支持权限控制。
 
+不过，因为Git支持钩子（hook），所以，可以在服务器端编写一系列脚本来控制提交等操作，达到权限控制的目的。Gitolite就是这个工具。
 
+##### 小结
 
++ 搭建Git服务器非常简单，通常10分钟即可完成；
++ 要方便管理公钥，用Gitosis；
++ 要像SVN那样变态地控制权限，用Gitolite。
 
+### 12. 期末总结
 
+一开始，Git上手比较困难，尤其是已经熟悉SVN的童鞋，没关系，多操练几次，就会越用越顺手。
 
+Git虽然极其强大，命令繁多，但常用的就那么十来个，掌握好这十几个常用命令，你已经可以得心应手地使用Git了。
 
+### 13. Git Cheat Sheet
 
+友情附赠国外网友制作的Git Cheat Sheet，建议打印出来备用：Git Cheat Sheet
+现在告诉你Git的官方网站：http://git-scm.com ，英文自我感觉不错的童鞋，可以经常去官网看看。什么，打不开网站？相信我，我给出的绝对是官网地址，而且，Git官网决没有那么容易宕机，可能是你的人品问题，赶紧面壁思过，好好想想原因。
 
+如果你学了Git后，工作效率大增，有更多的空闲时间健身看电影，那我的教学目标就达到了。
 
-
-
-
-
-
-
-
-
-
-
-删除文件用 git rm
-改文件名用 git mv
-使用 git 遇到问题时，git status 一下，通常都会有提示告诉你该怎么做
+![Git Cheat Sheet](./Git-Cheat-Sheet.png)
