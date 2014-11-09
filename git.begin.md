@@ -27,10 +27,11 @@ Linus一直痛恨的CVS及SVN都是集中式的版本控制系统，而Git是分
 
 #### 2.1 linux
 首先，你可以试着输入git，看看系统有没有安装Git：
-
-	$ git
-	The program 'git' is currently not installed. You can install it by typing:
-	$ sudo apt-get install git
+```
+$ git
+The program 'git' is currently not installed. You can install it by typing:
+$ sudo apt-get install git
+```
 像上面的命令，有很多Linux会友好地告诉你Git没有安装，还会告诉你如何安装Git。
 如果你碰巧用Debian或Ubuntu Linux，通过一条`sudo apt-get install git`就可以直接完成Git的安装，非常简单。老一点的Debian或Ubuntu Linux，要把命令改为`sudo apt-get install git-core`，因为以前有个软件也叫GIT（GNU Interactive Tools），结果Git就只能叫git-core了。由于Git名气实在太大，后来就把GNU Interactive Tools改成gnuit，git-core正式改为git。如果是其他Linux版本，可以直接通过源码安装。先从Git官网下载源码，然后解压，依次输入：`./config，make，sudo make install`这几个命令安装就好了。
 
@@ -58,16 +59,16 @@ msysgit是Windows版的Git，从http://msysgit.github.io/ 下载，然后按默�
 #### 3.1 初始化目录为可管理的仓库
 执行 **git init** 命令，在目录下生成一个.git 文件。
 
-	$ git init 
+`$ git init `
 
 #### 3.2 添加文本文件到版本库
 第一步，通过 **git add**  命令把文件添加到仓库
 
-	$ git add file.txt
+`$ git add file.txt`
 
 第二步，通过 **git commit** 命令把文本文件提交到仓库
 
-	$ git commit -m "wrote a text file"
+`$ git commit -m "wrote a text file"`
 
 *其中 -m后是本次提交的说明*  
 
@@ -77,7 +78,7 @@ msysgit是Windows版的Git，从http://msysgit.github.io/ 下载，然后按默�
 	$ git add file2.txt
 	$ git add file3.txt
 	$ git commit -m "add 3 files."
-#### 小结
+##### 小结
 1. 初始化一个Git仓库，使用`git init`命令。
 2. 添加文件到Git仓库，分两步：
 	+ 第一步，使用命令`git add filename`，注意，可反复多次使用，添加多个文件；
@@ -89,25 +90,31 @@ msysgit是Windows版的Git，从http://msysgit.github.io/ 下载，然后按默�
 #### 4.1 仓库状态查看
 第一步，**git status** 命令可以时刻掌控仓库状态，监控文件修改情况
 
-	$ git status
+`$ git status`  
+
 第二步，**git diff** 命令查看文件修改详情
 
-	$ git diff modified.txt
+`$ git diff modified.txt`  
+
 第三步，**git add** 命令添加文件到仓库
 
-	$ git add modified.txt
+`$ git add modified.txt`   
+
 第四步，**git status** 命令查看待提交文件信息
 
-	$ git status
+`$ git status`  
+
 第五步，**git commit -m ""** 命令提交文件
 	
-	$ git commit -m "modify file modified.txt"
+`$ git commit -m "modify file modified.txt"`
+  
 第六步，**git status** 命令查看仓库的当前状态
 
-	$ git status
+`$ git status`  
+
 Git会告诉我们当前没有需要提交的修改，工作目录是干净的。
 
-##### 小结
+###### 小结
 + 要随时掌握工作区的状态，使用`git status`命令。
 + 如果git status告诉你有文件被修改过，用`git diff`可以查看修改内容。
 
@@ -195,41 +202,72 @@ Git管理的是修改，当你用`git add`命令后，在工作区的第一次�
 
 ### 5. 远程仓库
 
-#### 5.2 添加远程库
-第一步，登陆GitHub，然后在右上角找到"Creat a new repo"按钮，创建新的仓库。在Repository name填入与本地仓库同名，最后按照默认设置完成创建。
-第二步，根据GitHub提示在本地仓库下运行命令**git remote add origin <url\>** 即可将本地仓库与远程仓库相关联。
+#### 5.1 初始设置
+注册GitHub账号后，由于本地Git仓库和GitHub仓库之间的传输是通过SSH加密的，所以，需要一些初始设置：
 
-	$ git remote add origin git@github.com:username/repo.name.git
+1. 第1步：创建**SSH Key**。在用户主目录下，如没有.ssh目录，打开Shell（Windows下打开Git Bash），创建SSH Key：   
+`$ ssh-keygen -t rsa -C youremail@example.com`
+
+    如果一切顺利的话，可以在用户主目录里找到.ssh目录，里面有id_rsa和id_rsa.pub两个文件，这两个就是SSH Key的秘钥对，id_rsa是私钥，不能泄露出去，id_rsa.pub是公钥，可以放心地告诉任何人。
+2. 登陆GitHub，打开“Account settings”，“SSH Keys”页面，然后，点“Add SSH Key”，填上任意Title，在Key文本框里粘贴id_rsa.pub文件的内容。
+
+GitHub允许你添加多个Key，只要把每台电脑的Key都添加到GitHub，就可以在每台电脑上往GitHub推送了。
+
+最后友情提示，在GitHub上免费托管的Git仓库，任何人都可以看到喔（但只有你自己才能改）。所以，不要把敏感信息放进去。
+
+
+#### 5.1 添加远程库
+在本地创建了一个Git仓库后，又想在GitHub创建一个Git仓库，并且让这两个仓库进行远程同步，这样，GitHub上的仓库既可以作为备份，又可以让其他人通过该仓库来协作，真是一举多得。
+
+1. 第一步，登陆GitHub，然后在右上角找到"Creat a new repo"按钮，创建新的仓库。在Repository name填入与本地仓库同名，最后按照默认设置完成创建。
+
+2. 第二步，根据GitHub提示在本地仓库下运行命令**git remote add origin <url\>** 即可将本地仓库与远程仓库相关联。
+
+`$ git remote add origin git@github.com:username/repo.name.git #推荐（速度快）`
+
 或者运行
 
-	$ git remote add origin https://github.com/username/repo.name.git
+`$ git remote add origin https://github.com/username/repo.name.git`
+
+实际上，Git支持多种协议，默认的git://使用ssh，但也可以使用https等其他协议。使用https除了速度慢以外，还有个最大的麻烦是每次推送都必须输入口令，但是在某些只开放http端口的公司内部就无法使用ssh协议而只能用https。
+
 如果出现以下出错信息
 
-	fatal: remote origin already exists.
+`fatal: remote origin already exists.`
 
 此时需要运行命令 **git remote rm origin** 后再重新运行上步关联命令。
 
-	$ git remote rm origin
+`$ git remote rm origin`
 第三步，将本地库中的所有内容推送到远程库上，命令为 **git push -u origin master** 
 
-	$ git push -u origin master
+`$ git push -u origin master`
 	
-> 用git push命令实际上是把当前分支master推送到远程。第一次推送master分支时，
+> 用git push命令实际上是把当前分支master推送到远程。由于远程库是空的，我们第一次推送master分支时，加上了-u参数，Git不但会把本地的master分支内容推送的远程新的master分支，还会把本地的master分支和远程的master分支关联起来，在以后的推送或者拉取时就可以简化命令为`git push origin master`或`git push`.
 
-> 定义远程服务器别名origin：`$ git remote add origin git@github.com:xxx/github-test.git`.本地和远程实行合并，本地默认为master:`$ git push origin master`;
 
-> 当通过Github以xxx对github-test作出修改时，由于本地快照与Github远程服务器上的不一致，会引起以下错误：
-```
-! [rejected]        master -> master (fetch first) 
-error: failed to push some refs to 'git@github.com:xxx/puppet' 
-hint: Updates were rejected because the remote contains work that you do 
-hint: not have locally. This is usually caused by another repository pushing 
-hint: to the same ref. You may want to first integrate the remote changes 
-hint: (e.g., 'git pull ...') before pushing again. 
-hint: See the 'Note about fast-forwards' in 'git push --help' for details.
-```
-此时可①通过pull子命令更新Github项目中作出的更改：`$ git pull origin master`,之后再执行`$ git push origin master`;②可用`git push -f`进行强制上传覆盖。
+> 定义远程服务器别名origin：`$ git remote add origin git@github.com:xxx/github-test.git`.本地和远程实行合并，本地默认为master:`$ git push origin master`;而当通过Github以xxx对github-test作出修改时，由于本地快照与Github远程服务器上的不一致，会引起以下错误：
 
+	```
+	! [rejected]        master -> master (fetch first) 
+	error: failed to push some refs to 'git@github.com:xxx/puppet' 
+	hint: Updates were rejected because the remote contains work that 	you do 
+	hint: not have locally. This is usually caused by another repository pushing 
+	hint: to the same ref. You may want to first integrate the remote changes 
+	hint: (e.g., 'git pull ...') before pushing again. 
+	hint: See the 'Note about fast-forwards' in 'git push --help' for details.
+	```
+> 此时可①通过pull子命令更新Github项目中作出的更改：`$ git pull origin master`,之后再执行`$ git push origin master`;②可用`git push -f`进行强制上传覆盖。
+
+#### 5.2 克隆远程库
+可用命令`git clone git@github.com:username/repo.name.git`将一个远程库克隆到本地。
+
++ 要克隆一个仓库，首先必须知道仓库的地址，然后使用`git clone`命令克隆。
+
++ Git支持多种协议，包括https，但通过ssh支持的原生git协议速度最快。
+
+### 6. 分支管理
+
+#### 6.1 
 
 删除文件用 git rm
 改文件名用 git mv
