@@ -380,6 +380,16 @@ $ git checkout dev #回原先的分支继续干活
 
 ##### 6.3.3 Feature分支
 
+软件开发中，添加一个新功能时，不希望因为一些实验性质的代码，把主分支搞乱了，所以，每添加一个新功能，最好新建一个feature分支，在上面开发，完成后，合并，最后，删除该feature分支。现在，你终于接到了一个新任务：开发代号为Vulcan的新功能，该功能计划用于下一代星际飞船。于是准备开发：  
+`$ git checkout -b feature-vulcan`
+当开发完毕并提交后，切回主分支并准备进行合并：`$ git checkout dev`，但接到上级命令，因经费不足，新功能必须取消！虽然白干了，但是这个分支还是必须就地销毁：`$ git branch -d feature-vulcan`，销毁失败。Git友情提醒，feature-vulcan分支还没有被合并，如果删除，将丢失掉修改，如果要强行删除，需要使用命令`git branch -D feature-vulcan`。现在强行删除：
+`$ git branch -D feature-vulcan`
+###### 小结
++ 开发一个新feature，最好新建一个分支；
++ 如果要丢弃一个没有被合并过的分支，可以通过git branch -D name强行删除。
+
+
+
 
 
 
